@@ -1,0 +1,96 @@
+<html>
+  <head>
+    <title>MTS Test</title>
+    <meta charset="utf-8" />
+  </head>
+  <body>
+    <script src="data.js"></script>
+    <div>
+      <script>
+        var today = new Date();
+        var dd = String(today.getDate()).padStart(2, "0");
+        var mm = String(today.getMonth() + 1).padStart(2, "0");
+        var yyyy = today.getFullYear();
+
+        today = mm + "/" + dd + "/" + yyyy;
+        document.write(today);
+      </script>
+    </div>
+    <textarea></textarea>
+    <div class="names"></div>
+    <button id="copy">Копировать</button>
+    <script>
+      var newdata = [];
+
+      First();
+      const textArea = document.getElementsByTagName("textarea")[0];
+      textArea.value = "";
+      textArea.addEventListener("input", () => {
+        document.getElementsByClassName("names")[0].innerHTML = "";
+
+        let val = textArea.value;
+        val = val.replace(/\s+/g, "");
+        val = val.toLowerCase();
+
+        if (val.length > 0) {
+          newdata = [];
+
+          for (let i = 0; i < data.length; i++) {
+            if (
+              data[i].firstName.includes(val) ||
+              data[i].surName.includes(val)
+            ) {
+              newdata.push(data[i]);
+            }
+          }
+        }
+        First();
+      });
+
+      function First() {
+        if (document.getElementsByTagName("textarea")[0].value.length == "") {
+          console.log("yes");
+          for (let i = 0; i < data.length; i++) {
+            let temp = document.createElement("div");
+            temp.innerHTML =
+              "<p1>" + data[i].firstName + " " + data[i].surName + "</p1>";
+            document.getElementsByClassName("names")[0].append(temp);
+          }
+        } else {
+          document.getElementsByClassName("names")[0].innerHTML = "";
+
+          for (let i = 0; i < newdata.length; i++) {
+            let temp = document.createElement("div");
+            temp.innerHTML =
+              "<p1>" +
+              newdata[i].firstName +
+              " " +
+              newdata[i].surName +
+              "</p1>";
+            document.getElementsByClassName("names")[0].append(temp);
+          }
+        }
+      }
+      document.getElementById("copy").addEventListener('click', () => {
+        const el = document.createElement("textarea");
+        if (newdata.length == 0) {
+            for (let i = 0; i < data.length; i++) {
+            el.value += data[i].firstName + ' ' + data[i].surName + ' ';
+          }
+        } else {
+            for (let i = 0; i < newdata.length; i++) {
+            el.value += newdata[i].firstName + ' ' + newdata[i].surName + ' ';
+          }
+        }
+        el.setAttribute("readonly", "");
+        el.style.position = "absolute";
+        el.style.left = "-9999px";
+        document.body.appendChild(el);
+        el.select();
+        document.execCommand("copy");
+        document.body.removeChild(el);
+    });
+    </script>
+    
+  </body>
+</html>
